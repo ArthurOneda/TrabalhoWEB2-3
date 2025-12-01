@@ -6,7 +6,6 @@ export function safeFormatDate(date: string | Date | undefined, fallback = '—'
 
     const parsedDate = date instanceof Date ? date : new Date(date);
 
-    // Verifica se a data é válida
     if (isNaN(parsedDate.getTime())) {
         return fallback;
     }

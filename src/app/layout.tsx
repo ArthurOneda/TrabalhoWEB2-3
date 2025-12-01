@@ -17,7 +17,6 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={inter.className}>
-        {/* Aplicar AuthProvider em todas as rotas (exceto auth) */}
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

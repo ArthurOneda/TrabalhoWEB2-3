@@ -7,12 +7,15 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { Task } from '@/types';
+import { signOut } from 'firebase/auth';
+import { useRouter } from 'next/navigation';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
 export default function Dashboard() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [loading, setLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -130,14 +133,33 @@ export default function Dashboard() {
         );
     }
 
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            router.push('/');
+        } catch (err) {
+            console.error('Erro ao sair:', err);
+            alert('Erro ao encerrar sessão.');
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
             <header className="bg-white shadow">
                 <div className="container mx-auto px-4 py-4 flex justify-between items-center">
                     <h1 className="text-2xl font-bold text-blue-600">TaskFlow</h1>
-                    <div className="text-right">
-                        <p className="text-sm text-gray-600">Bem-vindo!</p>
-                        <p className="text-sm font-medium">{auth.currentUser?.email}</p>
+                    <div className="flex items-center gap-4">
+                        <div className="text-right">
+                            <p className="text-sm text-gray-600">Bem-vindo!</p>
+                            <p className="text-sm font-medium">{auth.currentUser?.email}</p>
+                        </div>
+                        <button
+                            onClick={handleLogout}
+                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm font-medium"
+                            aria-label="Sair da conta"
+                        >
+                            Sair
+                        </button>
                     </div>
                 </div>
             </header>
